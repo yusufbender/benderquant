@@ -3,16 +3,22 @@ from src.indicators import add_indicators
 from src.summary import get_summary_info
 from src.plotter import plot_indicators
 from src.config import AI_STOCKS
-import os
 from src.dataset_builder import build_dataset
 from src.model_train import train_model
+from src.model_tuning import run_grid_search
+from src.cross_validate_model import cross_validate_model
+from src.oversample import apply_smote
+from src.model_compare import compare_models
 
+import os
+import warnings
 
-
+warnings.filterwarnings("ignore", category=UserWarning, message=".*use_label_encoder.*")
 
 if __name__ == "__main__":
     os.makedirs("data", exist_ok=True)
 
+    # 🔁 Veri çek ve ön işleme
     for ticker in AI_STOCKS:
         print(f"\n🔄 İşleniyor: {ticker}")
         try:
@@ -25,15 +31,33 @@ if __name__ == "__main__":
                 for key, value in info.items():
                     f.write(f"{key}: {value}\n")
 
-            # Sadece ilk hisseyi grafikte gösterelim
             if ticker == AI_STOCKS[0]:
                 plot_indicators(df, ticker)
 
         except Exception as e:
             print(f"❌ {ticker} verisi çekilemedi: {e}")
+
+    # 📦 Dataset oluştur
     dataset = build_dataset()
     print(dataset.head())
-    features = ["RSI", "EMA20", "SMA50"]
-    model = train_model(dataset, features, model_type="xgb")
 
+    # 🔎 Özellikleri belirle
+    features = dataset.columns.drop("Target").tolist()
 
+    # 🎯 Model eğitimi (XGBoost + SHAP)
+    train_model(dataset, features, model_type="xgb")
+
+    # 🔧 GridSearchCV ile hiperparametre optimizasyonu
+    run_grid_search(dataset, features)
+
+    # 🧪 Cross-validation değerlendirmesi
+    cross_validate_model(dataset, features, cv_folds=5)
+
+    # 📉 SMOTE ÖNCESİ model karşılaştırması (baseline için)
+    print("\n📉 SMOTE ÖNCESİ SONUÇLAR")
+    compare_models(dataset, features)
+
+    # 📈 SMOTE SONRASI model karşılaştırması
+    print("\n📈 SMOTE SONRASI SONUÇLAR")
+    smote_dataset = apply_smote(dataset, features)
+    compare_models(smote_dataset, features)

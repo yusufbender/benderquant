@@ -8,6 +8,7 @@ import shap
 from xgboost import XGBClassifier
 import shap
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def train_model(df: pd.DataFrame, features, target="Target", model_type="xgb"):
@@ -72,3 +73,29 @@ def explain_model_with_shap(model, X_sample):
     # Beeswarm (özellik etkilerini genel olarak göster)
     shap.plots.beeswarm(shap_values_for_class)
     plt.show()
+    importance_df = pd.DataFrame({
+        "feature": X_sample.columns,
+        "mean_abs_shap": np.abs(shap_values_for_class.values).mean(axis=0)
+    }).sort_values("mean_abs_shap", ascending=False)
+
+    print(importance_df.head(10))
+
+def add_advanced_features(df: pd.DataFrame) -> pd.DataFrame:
+    # Yüzde değişim (bugünkü kapanış - dünkü kapanış) / dünkü kapanış
+    df["Price_Change_Pct"] = df["Close"].pct_change() * 100
+
+    # RSI sinyalleri
+    df["RSI_Overbought"] = (df["RSI"] > 70).astype(int)
+    df["RSI_Oversold"] = (df["RSI"] < 30).astype(int)
+
+    # Trend Crossover
+    df["Trend_Crossover"] = (df["EMA20"] > df["SMA50"]).astype(int)
+
+    # Volatility
+    df["Volatility"] = df["BB_Upper"] - df["BB_Lower"]
+
+    # MACD Buy Signal (sadece yukarı kesişim)
+    df["MACD_Buy_Signal"] = ((df["MACD"].shift(1) < df["MACD_Signal"].shift(1)) & 
+                             (df["MACD"] > df["MACD_Signal"])).astype(int)
+
+    return df
