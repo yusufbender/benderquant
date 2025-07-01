@@ -103,3 +103,25 @@ Suggestions, stars, and forks are highly appreciated ⭐
 ## 📄 License
 
 MIT License – use it, modify it, share it 🙌
+
+## Output Example
+
+---
+
+## 🔍 Model Comparison
+
+| Metric        | Random Forest | XGBoost     |
+|---------------|---------------|-------------|
+| **Accuracy**      | ✅ 94%         | 🟨 91%     |
+| **Precision (Buy)**     | ✅ 0.96        | 🟨 0.92    |
+| **Recall (Buy)**        | ✅ 0.96        | 🟨 0.96    |
+| **F1 Score (Don't Buy)**| ✅ 0.86        | 🔻 0.77    |
+| **F1 Score (Buy)**      | ✅ 0.96        | 🟨 0.94    |
+
+- 🔍 **Random Forest** overall performs slightly better, especially on the minority class (Don't Buy).
+- ⚡ **XGBoost** performs comparably and may improve with hyperparameter tuning.
+- Both models provide over **90% accuracy**, making them solid choices depending on use-case.
+
+> 🎯 Next Steps: Add GridSearchCV, Optuna, or cross-validation for improved performance.
+
+---

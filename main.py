@@ -34,5 +34,6 @@ if __name__ == "__main__":
     dataset = build_dataset()
     print(dataset.head())
     features = ["RSI", "EMA20", "SMA50"]
-    model = train_model(dataset, features)
+    model = train_model(dataset, features, model_type="xgb")
+
 

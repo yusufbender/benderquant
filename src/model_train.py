@@ -5,25 +5,32 @@ from sklearn.metrics import classification_report, confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
 import shap
+from xgboost import XGBClassifier
+import shap
+import matplotlib.pyplot as plt
 
-def train_model(df: pd.DataFrame, features, target="Target"):
+
+def train_model(df: pd.DataFrame, features, target="Target", model_type="xgb"):
     X = df[features]
     y = df[target]
 
-    # Eğitim/test bölmesi
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.3, random_state=42, stratify=y
     )
 
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
-    model.fit(X_train, y_train)
+    if model_type == "rf":
+        model = RandomForestClassifier(n_estimators=100, random_state=42)
+    elif model_type == "xgb":
+        model = XGBClassifier(n_estimators=100, use_label_encoder=False, eval_metric='logloss', random_state=42)
+    else:
+        raise ValueError("Desteklenmeyen model türü")
 
+    model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
 
     print("\n🧪 Test Sonuçları:")
     print(classification_report(y_test, y_pred, target_names=["Don't Buy", "Buy"]))
 
-    # Confusion Matrix
     cm = confusion_matrix(y_test, y_pred)
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
                 xticklabels=["Don't Buy", "Buy"],
@@ -33,17 +40,11 @@ def train_model(df: pd.DataFrame, features, target="Target"):
     plt.ylabel("Actual")
     plt.tight_layout()
     plt.show()
-        # Rastgele örneklerden SHAP ile açıklama
+
     sample = X_test.sample(50, random_state=42)
     explain_model_with_shap(model, sample)
 
-
     return model
-
-
-
-import shap
-import matplotlib.pyplot as plt
 
 def explain_model_with_shap(model, X_sample):
     explainer = shap.Explainer(model, X_sample)

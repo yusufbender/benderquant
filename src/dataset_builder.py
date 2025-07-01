@@ -4,7 +4,13 @@ from src.labeling import add_target_label
 
 def build_dataset(data_dir="data", features=None):
     if features is None:
-        features = ["RSI", "EMA20", "SMA50"]
+        features = [
+            "RSI", "EMA20", "SMA50",
+            "MACD", "MACD_Signal",
+            "BB_Middle", "BB_Upper", "BB_Lower",
+            "Volume_Norm"
+        ]
+
 
     all_rows = []
     for filename in os.listdir(data_dir):
