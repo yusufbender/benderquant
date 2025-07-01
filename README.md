@@ -1,18 +1,22 @@
 # 🧠 BenderQuant
 
-**Technical analysis on AI stocks using RSI, EMA, SMA with buy/sell labeling and explainable machine learning (SHAP + Random Forest).**
+**AI hisseleri üzerinde teknik analiz yapan, SHAP ile açıklanabilir makine öğrenimi kullanan çok modellerli bir sistem.**
 
-## 📌 Features
+## 📌 Özellikler
 
-- 📉 Fetches AI-focused stock data using `yfinance`
-- 📊 Applies technical indicators: `RSI`, `EMA20`, `SMA50`
-- 🎯 Labels data for Buy/Sell using simple forward logic
-- 🧪 Trains a `RandomForestClassifier` model
-- 🔍 Explains predictions with `SHAP` (Waterfall + Beeswarm)
-- 📈 Saves technical indicator plots
-- 💾 Outputs datasets & summaries for each stock
+- 📉 AI şirketlerinin borsa verisini `yfinance` ile otomatik çeker  
+- 📊 Teknik göstergeleri hesaplar: `RSI`, `EMA20`, `SMA50`, `MACD`, `Bollinger Bands`, `Volume`
+- 🎯 Basit ileriye dönük etiketleme ile `Buy` / `Don't Buy` sınıflandırması
+- 🤖 Çoklu model desteği: `Random Forest`, `XGBoost`, `LightGBM`, `CatBoost`, `Logistic Regression`
+- ⚖️ SMOTE ile veri dengesizliği çözümü
+- 🔍 SHAP ile model açıklamaları: `waterfall`, `beeswarm`
+- 🧪 GridSearchCV ve Stratified K-Fold ile hiperparametre optimizasyonu
+- 📈 Performans karşılaştırması (F1, Precision, Recall)
+- 🧬 Özellik önem sıralamaları + görselleştirme
+- 📁 Verileri `data/` klasörüne kaydeder, `summary.txt` üretir
+- 💡 Her hisse için görsel teknik analiz grafiği oluşturur
 
-## 📈 Tracked AI Stocks
+## 🧠 Takip Edilen AI Hisseleri
 
 ```python
 AI_STOCKS = [
@@ -24,7 +28,7 @@ AI_STOCKS = [
 ]
 ```
 
-## ⚙️ Installation
+## ⚙️ Kurulum
 
 ```bash
 git clone https://github.com/yusufbender/benderquant.git
@@ -41,87 +45,71 @@ pip install -r requirements.txt
 python main.py
 ```
 
-## 🧪 Output Example
+## ✅ Çıktı Örnekleri
+
+### 🎯 Sınıflandırma Raporu
 
 ```
 🧪 Test Sonuçları:
               precision    recall  f1-score   support
-
    Don't Buy       0.86      0.86      0.86        14
          Buy       0.96      0.96      0.96        51
-
     accuracy                           0.94        65
-   macro avg       0.91      0.91      0.91        65
-weighted avg       0.94      0.94      0.94        65
 ```
 
-## ✅ TODO List
+### 📊 Model Karşılaştırması (SMOTE sonrası)
 
-- [x] Fetch stock data using `yfinance`
-- [x] Add `RSI`, `EMA20`, `SMA50` indicators
-- [x] Label data with simple forward-looking strategy
-- [x] Train model with Random Forest
-- [x] Add SHAP explanations (waterfall + beeswarm)
-- [x] Confusion Matrix and Classification Report
-- [ ] Add MACD, Bollinger Bands, and Volume indicators
-- [ ] Try advanced models: `XGBoost`, `LightGBM`
-- [ ] Add web dashboard (Streamlit or Dash)
-- [ ] Automate daily pipeline with GitHub Actions
-- [ ] Add backtesting module
+| Model             | f1_weighted | Std     |
+|------------------|-------------|---------|
+| ✅ LightGBM       | 0.9799      | ±0.0250 |
+| ✅ RandomForest   | 0.9741      | ±0.0264 |
+| ✅ CatBoost       | 0.9741      | ±0.0278 |
+| 🟨 XGBoost        | 0.9683      | ±0.0291 |
+| ⚠️ LogisticReg.  | 0.7238      | ±0.0364 |
 
-## 📁 Project Structure
+## ✅ Yapılacaklar
+
+- [x] RSI, EMA, MACD, BB, Volume gibi teknik göstergeler
+- [x] Buy/Sell etiketleme
+- [x] XGBoost, LightGBM, CatBoost ile model karşılaştırması
+- [x] GridSearchCV ile hiperparametre tuning
+- [x] SMOTE ile veri dengesi
+- [x] SHAP ile açıklanabilirlik
+- [ ] 🔜 Streamlit veya Dash ile görsel web arayüzü
+- [ ] 🔜 Günlük otomasyon için GitHub Actions
+- [ ] 🔜 Backtesting modülü (geçmişe dönük test)
+
+## 📁 Proje Yapısı
 
 ```
 benderquant/
 ├── main.py
 ├── requirements.txt
 ├── README.md
-├── .gitignore
 ├── data/
-│   └── <ticker>_data.csv
 ├── src/
 │   ├── config.py
 │   ├── data_loader.py
 │   ├── indicators.py
-│   ├── labeling.py
 │   ├── summary.py
 │   ├── plotter.py
+│   ├── dataset_builder.py
 │   ├── model_train.py
-│   └── dataset_builder.py
+│   ├── model_tuning.py
+│   ├── cross_validate_model.py
+│   ├── oversample.py
+│   └── model_compare.py
 ```
 
-## 🧠 Explainable ML (SHAP)
+## 🔍 SHAP Açıklamaları
 
-SHAP Waterfall: Visualizes how each feature pushes a prediction.  
-SHAP Beeswarm: Shows global feature importance across all predictions.
+- **SHAP Waterfall**: Bir örnek için kararın neden Buy/Don't Buy olduğunu detaylandırır.
+- **SHAP Beeswarm**: Tüm verilerde hangi özelliklerin daha etkili olduğunu görselleştirir.
 
-## 🧑‍💻 Contributing
+## 📄 Lisans
 
-Pull requests are welcome. For major changes, open an issue first.  
-Suggestions, stars, and forks are highly appreciated ⭐
-
-## 📄 License
-
-MIT License – use it, modify it, share it 🙌
-
-## Output Example
+MIT Lisansı — kullan, geliştir, paylaş 🚀
 
 ---
 
-## 🔍 Model Comparison
-
-| Metric        | Random Forest | XGBoost     |
-|---------------|---------------|-------------|
-| **Accuracy**      | ✅ 94%         | 🟨 91%     |
-| **Precision (Buy)**     | ✅ 0.96        | 🟨 0.92    |
-| **Recall (Buy)**        | ✅ 0.96        | 🟨 0.96    |
-| **F1 Score (Don't Buy)**| ✅ 0.86        | 🔻 0.77    |
-| **F1 Score (Buy)**      | ✅ 0.96        | 🟨 0.94    |
-
-- 🔍 **Random Forest** overall performs slightly better, especially on the minority class (Don't Buy).
-- ⚡ **XGBoost** performs comparably and may improve with hyperparameter tuning.
-- Both models provide over **90% accuracy**, making them solid choices depending on use-case.
-
-> 🎯 Next Steps: Add GridSearchCV, Optuna, or cross-validation for improved performance.
-
----
+> Bu proje bir yatırım tavsiyesi değildir. Eğitimsel amaçlarla geliştirilmiştir.
