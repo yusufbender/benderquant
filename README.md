@@ -1,5 +1,7 @@
 # 🧠 BenderQuant
 
+![GitHub repo views](https://komarev.com/ghpvc/?username=yusufbender&repo=benderquant&color=blue)
+
 **AI hisseleri üzerinde teknik analiz yapan, SHAP ile açıklanabilir makine öğrenimi kullanan çok modellerli bir sistem.**
 
 ## 📌 Özellikler
