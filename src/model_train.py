@@ -9,6 +9,7 @@ from xgboost import XGBClassifier
 import shap
 import matplotlib.pyplot as plt
 import numpy as np
+from src.model_utils import save_model
 
 
 def train_model(df: pd.DataFrame, features, target="Target", model_type="xgb"):
@@ -28,6 +29,7 @@ def train_model(df: pd.DataFrame, features, target="Target", model_type="xgb"):
 
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
+    save_model(model)
 
     print("\n🧪 Test Sonuçları:")
     print(classification_report(y_test, y_pred, target_names=["Don't Buy", "Buy"]))
