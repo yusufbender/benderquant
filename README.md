@@ -77,9 +77,9 @@ python main.py
 - [x] GridSearchCV ile hiperparametre tuning
 - [x] SMOTE ile veri dengesi
 - [x] SHAP ile açıklanabilirlik
-- [ ] 🔜 Streamlit veya Dash ile görsel web arayüzü
+- [x] Streamlit veya Dash ile görsel web arayüzü
 - [ ] 🔜 Günlük otomasyon için GitHub Actions
-- [ ] 🔜 Backtesting modülü (geçmişe dönük test)
+- [x] Backtesting modülü (geçmişe dönük test)
 
 ## 📁 Proje Yapısı
 
