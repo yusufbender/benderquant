@@ -1,7 +1,7 @@
 import yfinance as yf
 import pandas as pd
 
-def get_stock_data(ticker: str, period="6mo", interval="1d"):
+def get_stock_data(ticker: str, period="5y", interval="1d"):
     df = yf.download(ticker, period=period, interval=interval, auto_adjust=True)
     df.dropna(inplace=True)
 

@@ -17,6 +17,7 @@ def build_dataset(data_dir="data", features=None):
     all_rows = []
     for filename in os.listdir(data_dir):
         if filename.endswith("_data.csv"):
+            symbol = filename.replace("_data.csv", "")
             df = pd.read_csv(os.path.join(data_dir, filename), index_col=0)
 
             if "Close" not in df.columns or df["Close"].dtype == object:
@@ -25,8 +26,12 @@ def build_dataset(data_dir="data", features=None):
 
             df["Close"] = df["Close"].astype(float)
             df = add_target_label(df)
-            df = add_advanced_features(df)  # 👈 yeni özellikler eklendi
-            df = df[features + ["Target"]].dropna()
+            df = add_advanced_features(df)
+
+            # 👇 Symbol sütununu ekle
+            df["Symbol"] = symbol.upper()
+
+            df = df[features + ["Symbol", "Target"]].dropna()
             all_rows.append(df)
 
     dataset = pd.concat(all_rows, ignore_index=True)

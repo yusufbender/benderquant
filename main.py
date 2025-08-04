@@ -1,3 +1,4 @@
+import joblib
 from src.data_loader import get_stock_data
 from src.indicators import add_indicators
 from src.summary import get_summary_info
@@ -9,6 +10,7 @@ from src.model_tuning import run_grid_search
 from src.cross_validate_model import cross_validate_model
 from src.oversample import apply_smote
 from src.model_compare import compare_models
+from sklearn.preprocessing import LabelEncoder
 
 import os
 import warnings
@@ -40,7 +42,9 @@ if __name__ == "__main__":
     # 📦 Dataset oluştur
     dataset = build_dataset()
     print(dataset.head())
-
+    le = LabelEncoder()
+    dataset["Symbol"] = le.fit_transform(dataset["Symbol"])
+    joblib.dump(le, "models/symbol_encoder.pkl")
     # 🔎 Özellikleri belirle
     features = dataset.columns.drop("Target").tolist()
 
