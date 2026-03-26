@@ -14,7 +14,7 @@ FEATURES = [
     "RSI", "EMA20", "SMA50", "MACD", "MACD_Signal", "BB_Middle",
     "BB_Upper", "BB_Lower", "Volume_Norm", "Price_Change_Pct",
     "RSI_Overbought", "RSI_Oversold", "Trend_Crossover",
-    "Volatility", "MACD_Buy_Signal", "Symbol"
+    "Volatility", "MACD_Buy_Signal"
 ]
 
 def run_backtest_for_ticker(ticker, period="6mo"):
@@ -35,9 +35,6 @@ def run_backtest_for_ticker(ticker, period="6mo"):
     df = df.dropna()
 
     model = load_model()
-    from joblib import load
-    le = load("models/symbol_encoder.pkl")
-    df["Symbol"] = le.transform(df["Symbol"])
 
     df["Prediction"] = model.predict(df[FEATURES])
     result = df[["Close", "Prediction"]]
