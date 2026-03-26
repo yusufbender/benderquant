@@ -31,7 +31,7 @@ def build_dataset(data_dir="data", features=None):
             # 👇 Symbol sütununu ekle
             df["Symbol"] = symbol.upper()
 
-            df = df[features + ["Symbol", "Target"]].dropna()
+            df = df[features + ["Target"]].dropna()
             all_rows.append(df)
 
     dataset = pd.concat(all_rows, ignore_index=True)

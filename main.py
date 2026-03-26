@@ -42,9 +42,6 @@ if __name__ == "__main__":
     # 📦 Dataset oluştur
     dataset = build_dataset()
     print(dataset.head())
-    le = LabelEncoder()
-    dataset["Symbol"] = le.fit_transform(dataset["Symbol"])
-    joblib.dump(le, "models/symbol_encoder.pkl")
     # 🔎 Özellikleri belirle
     features = dataset.columns.drop("Target").tolist()
 
@@ -65,3 +62,9 @@ if __name__ == "__main__":
     print("\n📈 SMOTE SONRASI SONUÇLAR")
     smote_dataset = apply_smote(dataset, features)
     compare_models(smote_dataset, features)
+
+    # Walkforward validation
+    from src.walkforward import walkforward_validate
+    print("\n🔁 WALKFORWARD VALIDATION")
+    wf_results = walkforward_validate(dataset, features, n_splits=5)
+    print(wf_results.to_string(index=False))
